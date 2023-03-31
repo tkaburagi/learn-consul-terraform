@@ -4,7 +4,6 @@
 variable "name" {
   description = "Name to be used on all the resources as identifier."
   type        = string
-  default     = "consul-ecs"
 }
 
 variable "region" {
@@ -16,7 +15,7 @@ variable "region" {
 variable "hcp_datacenter_name" {
   type        = string
   description = "The name of datacenter the Consul cluster belongs to"
-  default     = "dc1"
+  default     = "${var.name}-dc1"
 }
 
 variable "default_tags" {
