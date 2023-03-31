@@ -10,7 +10,7 @@ resource "aws_security_group" "example_client_app_alb" {
     from_port   = 9090
     to_port     = 9090
     protocol    = "tcp"
-    cidr_blocks = ["${var.lb_ingress_ip}/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {

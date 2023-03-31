@@ -13,11 +13,6 @@ variable "region" {
   default     = "us-east-1"
 }
 
-variable "lb_ingress_ip" {
-  description = "Your Public IP. This is used in the load balancer security groups to ensure only you can access the Consul UI and example application."
-  type        = string
-}
-
 variable "hcp_datacenter_name" {
   type        = string
   description = "The name of datacenter the Consul cluster belongs to"
