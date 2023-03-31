@@ -15,7 +15,6 @@ variable "region" {
 variable "hcp_datacenter_name" {
   type        = string
   description = "The name of datacenter the Consul cluster belongs to"
-  default     = "${var.name}-dc1"
 }
 
 variable "default_tags" {
