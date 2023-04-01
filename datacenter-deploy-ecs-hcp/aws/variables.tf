@@ -8,12 +8,7 @@ variable "name" {
 variable "region" {
   description = "AWS region."
   type        = string
-  default     = "us-east-1"
-}
-
-variable "hcp_datacenter_name" {
-  type        = string
-  description = "The name of datacenter the Consul cluster belongs to"
+  default     = "us-east-2"
 }
 
 variable "default_tags" {
@@ -24,4 +19,12 @@ variable "default_tags" {
     Team        = "Education-Consul"
     tutorial    = "Serverless Consul service mesh with ECS and HCP"
   }
+}
+
+variable "hcp_cluster_id"{
+  type = string
+}
+
+variable "consul_root_token_id"{
+  type = string
 }

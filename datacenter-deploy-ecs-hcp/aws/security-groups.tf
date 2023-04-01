@@ -1,5 +1,9 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
+data "aws_security_group" "vpc_default" {
+  name   = "default"
+  vpc_id = module.vpc.vpc_id
+}
 
 resource "aws_security_group" "example_client_app_alb" {
   name   = "${var.name}-example-client-app-alb"

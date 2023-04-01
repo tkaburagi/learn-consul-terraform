@@ -1,11 +1,8 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
-
 module "acl_controller" {
   source  = "hashicorp/consul-ecs/aws//modules/acl-controller"
   version = "0.2.0"
-
-
   log_configuration = {
     logDriver = "awslogs"
     options = {
@@ -14,14 +11,12 @@ module "acl_controller" {
       awslogs-stream-prefix = "consul-acl-controller"
     }
   }
-  consul_bootstrap_token_secret_arn = aws_secretsmanager_secret.bootstrap_token.arn
-  consul_server_http_addr           = hcp_consul_cluster.example.consul_public_endpoint_url
-  ecs_cluster_arn                   = aws_ecs_cluster.this.arn
+  consul_bootstrap_token_secret_arn = data.aws_secretsmanager_secret.bootstrap_token.arn
+  consul_server_http_addr           = data.hcp_consul_cluster.example.consul_public_endpoint_url
+  ecs_cluster_arn                   = data.aws_ecs_cluster.example.arn
   region                            = var.region
-  subnets                           = module.vpc.private_subnets
+  subnets                           = data.aws_subnet_ids.private.ids
   name_prefix                       = var.name
-
-  depends_on = [hcp_consul_cluster.example]
 }
 
 module "example_client_app" {
@@ -63,16 +58,16 @@ module "example_client_app" {
       local_bind_port  = 1234
     }
   ]
-  retry_join                     = jsondecode(base64decode(hcp_consul_cluster.example.consul_config_file))["retry_join"]
+  retry_join                     = jsondecode(base64decode(data.hcp_consul_cluster.example.consul_config_file))["retry_join"]
   tls                            = true
-  consul_server_ca_cert_arn      = aws_secretsmanager_secret.consul_ca_cert.arn
-  gossip_key_secret_arn          = aws_secretsmanager_secret.gossip_key.arn
+  consul_server_ca_cert_arn      = data.aws_secretsmanager_secret.consul_ca_cert.arn
+  gossip_key_secret_arn          = data.aws_secretsmanager_secret.gossip_key.arn
   acls                           = true
   consul_client_token_secret_arn = module.acl_controller.client_token_secret_arn
   acl_secret_name_prefix         = var.name
-  consul_datacenter              = var.hcp_datacenter_name
+  consul_datacenter              = var.hcp_cluster_id
 
-  depends_on = [hcp_consul_cluster.example, module.acl_controller, module.example_server_app]
+  depends_on = [module.acl_controller, module.example_server_app]
 }
 
 module "example_server_app" {
@@ -94,14 +89,14 @@ module "example_server_app" {
       }
     ]
   }]
-  retry_join                     = jsondecode(base64decode(hcp_consul_cluster.example.consul_config_file))["retry_join"]
+  retry_join                     = jsondecode(base64decode(data.hcp_consul_cluster.example.consul_config_file))["retry_join"]
   tls                            = true
-  consul_server_ca_cert_arn      = aws_secretsmanager_secret.consul_ca_cert.arn
-  gossip_key_secret_arn          = aws_secretsmanager_secret.gossip_key.arn
+  consul_server_ca_cert_arn      = data.aws_secretsmanager_secret.consul_ca_cert.arn
+  gossip_key_secret_arn          = data.aws_secretsmanager_secret.gossip_key.arn
   acls                           = true
   consul_client_token_secret_arn = module.acl_controller.client_token_secret_arn
   acl_secret_name_prefix         = var.name
-  consul_datacenter              = var.hcp_datacenter_name
+  consul_datacenter              = var.hcp_cluster_id
 
   depends_on = [module.acl_controller]
 }

@@ -1,6 +1,3 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
 terraform {
   required_providers {
     aws = {
@@ -14,11 +11,10 @@ terraform {
   }
 }
 
+provider "hcp" {}
 provider "aws" {
   region = var.region
   default_tags {
     tags = var.default_tags
   }
 }
-
-provider "hcp" {}
